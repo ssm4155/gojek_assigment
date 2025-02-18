@@ -47,7 +47,4 @@ class SklearnClassifier(Classifier):
         return metrics_dict
 
     def predict(self, df: pd.DataFrame):
-        print(df.shape)
-        print(df.isna().sum())
-        print(df[df["n_requests"].isna()].head())
         return self.clf.predict(df[self.features],prediction_type='Probability')[:, 1]

@@ -11,7 +11,9 @@ def main():
     store = AssignmentStore()
 
     df_test = store.get_raw("test_data.csv")
-    df_test = apply_feature_engineering(df_test)
+    participant_past_perf = store.get_processed("participant_past_performance.csv")
+    participant_distance_preference = store.get_processed("participant_distance_preference.csv")
+    df_test = apply_feature_engineering(df_test,participant_past_perf,participant_distance_preference)
 
     model = store.get_model("saved_model.pkl")
     df_test["score"] = model.predict(df_test)
