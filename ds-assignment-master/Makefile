@@ -15,11 +15,14 @@ setup_env:
 ifeq (True,$(HAS_PYENV))
 	@echo ">>> Detected pyenv, setting pyenv version to ${CONDA_VERSION}"
 	pyenv local ${CONDA_VERSION}
-	conda env create --name $(PROJECT_NAME) -f environment.yaml --force
+	conda env remove --name $(PROJECT_NAME) || true
+	conda env create --name $(PROJECT_NAME) -f environment.yaml
+
 	pyenv local ${CONDA_VERSION}/envs/${PROJECT_NAME}
 else
 	@echo ">>> Creating conda environment."
-	conda env create --name $(PROJECT_NAME) -f environment.yaml --force
+	conda env remove --name $(PROJECT_NAME) || true
+	conda env create --name $(PROJECT_NAME) -f environment.yaml
 	@echo ">>> Activating new conda environment"
 	source $(CONDA_ROOT)/bin/activate $(PROJECT_NAME)
 endif
@@ -51,7 +54,7 @@ predict:
 
 test:
 	@echo "Running all unit tests.."
-	${BINARIES}/nosetests --nologcapture
+	${BINARIES}/nose2 -v -s test
 
 run: clean data features train predict test
 
